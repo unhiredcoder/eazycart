@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItemToCart } from './store';
+import { addItemToCart,setCartItems } from './store';
 import './card.css';
 
 const ProductList = () => {
@@ -27,6 +27,25 @@ const ProductList = () => {
       dispatch(addItemToCart({ id, price, title, image, description, quantity: 1 }));
     }
   };
+
+
+
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }
+  }, [cartItems]);
+
+
+  useEffect(() => {
+    const storedCartItems = localStorage.getItem('cartItems');
+    if (storedCartItems) {
+      const parsedCartItems = JSON.parse(storedCartItems);
+      dispatch(setCartItems(parsedCartItems));
+    }
+  }, [dispatch]);
+
+
 
   return (
     <div>

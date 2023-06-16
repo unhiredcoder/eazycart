@@ -1,11 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect,useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCartItems } from './store';
 import { Link } from 'react-router-dom';
-import './card.css'; // Import the CSS file for Nav styles
+import './card.css';
 
 const Nav = () => {
+  const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const [shakeCart, setShakeCart] = useState(false);
+
+
+  useEffect(() => {
+    const storedCartItems = localStorage.getItem('cartItems');
+    if (storedCartItems) {
+      const parsedCartItems = JSON.parse(storedCartItems);
+      dispatch(setCartItems(parsedCartItems));
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     if (cartItems.length > 0) {
@@ -23,7 +34,7 @@ const Nav = () => {
       </h1>
       <Link className={`Link ${shakeCart ? 'shake' : ''}`} to="/cart">
         <ion-icon name="bag-handle"></ion-icon>
-        {cartItems.length > 0 ? <sup>{cartItems.length}</sup> : <sup>0</sup>}
+        <sup>{cartItems.length}</sup>
       </Link>
     </div>
   );

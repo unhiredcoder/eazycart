@@ -7,27 +7,12 @@ const Cart = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
 
+
   const handleDelete = (itemId) => {
     dispatch(removeItemFromCart(itemId));
+    const updatedCartItems = cartItems.filter((item) => item.id !== itemId);
+    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
   };
-
-
-  useEffect(() => {
-    if (cartItems.length > 0) {
-      localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    }
-  }, [cartItems]);
-
-
-  useEffect(() => {
-    const storedCartItems = localStorage.getItem('cartItems');
-    if (storedCartItems) {
-      const parsedCartItems = JSON.parse(storedCartItems);
-      dispatch(setCartItems(parsedCartItems));
-    }
-  }, [dispatch]);
-
-
 
   const handleIncrement = (item) => {
     dispatch(incrementQuantity(item.id));
@@ -39,7 +24,7 @@ const Cart = () => {
     }
   };
 
- 
+
   return (
     <div className="cart">
       {cartItems.length === 0 ? (
